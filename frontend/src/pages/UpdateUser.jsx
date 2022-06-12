@@ -1,32 +1,49 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import { Typography } from "@mui/material";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-function CreateUser() {
+function UpdateUser() {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
+
+  const params = useParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function getUser() {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/users/${params._id}`
+        );
+        const user = response.data;
+        console.log(response.data);
+        setUserName(user.name);
+        setUserEmail(user.email);
+        setUserPassword(user.password);
+      } catch (err) {}
+    }
+    getUser();
+  }, [params._id]);
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
       axios
-        .post("http://localhost:5000/users", {
+        .patch(`http://localhost:5000/users/${params._id}`, {
           name: userName,
           email: userEmail,
           password: userPassword,
         })
-        .then(() => {
-          navigate("/");
-        });
+        .then(() => navigate("/"));
     } catch (err) {}
   }
+
   return (
     <>
-      <Typography>Create</Typography>
+      <Typography>Update</Typography>
       <form onSubmit={handleSubmit}>
         <div>
           <label>
@@ -64,10 +81,11 @@ function CreateUser() {
             />
           </label>
         </div>
-        <button type="submit">Create</button>
+        <button type="submit">Update</button>
       </form>
+      <Link to="/">Cancel</Link>
     </>
   );
 }
 
-export default CreateUser;
+export default UpdateUser;

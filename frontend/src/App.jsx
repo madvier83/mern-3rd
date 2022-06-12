@@ -4,6 +4,8 @@ import { Typography } from "@mui/material";
 import Home from "./pages/Home";
 import CreateUser from "./pages/CreateUser";
 import Navbar from "./components/navbar";
+import DetailUser from "./pages/DetailUser";
+import UpdateUser from "./pages/UpdateUser";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/create" element={<CreateUser />} />
+        <Route path="/:_id" element={<DetailUser />} />
+        <Route path="/update/:_id" element={<UpdateUser />} />
       </Routes>
     </>
   );
